@@ -41,6 +41,7 @@
             txtCategory = new TextBox();
             txtModel = new TextBox();
             lstCars = new ListBox();
+            lblOutput = new Label();
             SuspendLayout();
             // 
             // label1
@@ -85,7 +86,7 @@
             // 
             lblRegistredCars.AutoSize = true;
             lblRegistredCars.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRegistredCars.Location = new Point(231, 331);
+            lblRegistredCars.Location = new Point(231, 381);
             lblRegistredCars.Name = "lblRegistredCars";
             lblRegistredCars.Size = new Size(102, 17);
             lblRegistredCars.TabIndex = 4;
@@ -156,16 +157,26 @@
             // 
             lstCars.FormattingEnabled = true;
             lstCars.ItemHeight = 15;
-            lstCars.Location = new Point(231, 365);
+            lstCars.Location = new Point(231, 412);
             lstCars.Name = "lstCars";
-            lstCars.Size = new Size(258, 49);
+            lstCars.Size = new Size(267, 64);
             lstCars.TabIndex = 12;
+            // 
+            // lblOutput
+            // 
+            lblOutput.AutoSize = true;
+            lblOutput.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblOutput.Location = new Point(227, 321);
+            lblOutput.Name = "lblOutput";
+            lblOutput.Size = new Size(0, 17);
+            lblOutput.TabIndex = 13;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 486);
+            ClientSize = new Size(800, 509);
+            Controls.Add(lblOutput);
             Controls.Add(lstCars);
             Controls.Add(txtModel);
             Controls.Add(txtCategory);
@@ -201,5 +212,6 @@
         private TextBox txtCategory;
         private TextBox txtModel;
         private ListBox lstCars;
+        private Label lblOutput;
     }
 }
