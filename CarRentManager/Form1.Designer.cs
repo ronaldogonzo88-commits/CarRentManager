@@ -64,6 +64,7 @@
             btnAddCar.TabIndex = 1;
             btnAddCar.Text = "Add Car";
             btnAddCar.UseVisualStyleBackColor = true;
+            btnAddCar.Click += btnAddCar_Click;
             // 
             // txtPlate
             // 

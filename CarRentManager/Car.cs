@@ -45,10 +45,10 @@ namespace CarRentManager
             this.dailyRate = dailyRate;
         }
 
-        //Constructor which checks if the car is rented or not
+        //Method which checks if the car is rented or not
         public string GetStatus()
         {
-            if (isRented == true)
+            if (isRented)
             {
                 return "Rented";
             }
