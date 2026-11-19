@@ -45,7 +45,7 @@ namespace CarRentManager
             this.dailyRate = dailyRate;
         }
 
-        //Method which checks if the car is rented or not
+        //MethodCarList which checks if the car is rented or not
         public string GetStatus()
         {
             if (isRented)
