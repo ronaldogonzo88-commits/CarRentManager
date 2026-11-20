@@ -1,9 +1,14 @@
+using System.Runtime.CompilerServices;
+
 namespace CarRentManager
 {
     public partial class Form1 : Form
     {
         //List which stores all registered cars
         List<Car> cars = new List<Car>();
+
+        //Store all history of rentals
+        private List<Rental> rentals = new List<Rental>();
         public Form1()
         {
             InitializeComponent();
@@ -24,6 +29,24 @@ namespace CarRentManager
                     return false;
             }
             //Return true if all characters are valid
+            return true;
+        }
+
+        //Check wheather the phone number contains 7 to 10 digits
+        private bool IsValidPhone(string phone)
+        {
+            //checks if plate is 7 to 10 digits
+            if (phone.Length < 7 || phone.Length > 10)
+            {
+                return false;
+            }
+            //checks if each character is digit
+            for (int i = 0; i < phone.Length; i++)
+            {
+                if (!char.IsDigit(phone[i]))
+                    return false;
+            }
+            //return true if all are correct
             return true;
         }
 
@@ -111,6 +134,91 @@ namespace CarRentManager
             txtModel.Clear();
             txtDailyRate.Clear();
             lblOutput.Text = "";
+        }
+
+        private void btnRent_Click(object sender, EventArgs e)
+        {
+            //Check if car has been selected
+            if (lstCars.SelectedIndex == -1)
+            {
+                lblOutput.Text = "Please select a car";
+                return;
+            }
+            //Get selected car from the car list
+            Car selectedCar = cars[lstCars.SelectedIndex];
+            //Check if the selected car is already rented
+            if (selectedCar.IsRented)
+            {
+                lblOutput.Text = "This car is already rented";
+                return;
+            }
+            //Check if the customer name is empty
+            if (txtCustomerName.Text == "")
+            {
+                lblOutput.Text = "Please customer name";
+                return;
+            }
+            //check if the phone number is valid
+            if (!IsValidPhone(txtPhoneNumber.Text))
+            {
+                lblOutput.Text = "Please enter a valid phone number";
+                return;
+            }
+            //Checks a rental record using todays date
+            Rental rental = new Rental(selectedCar.Plate, txtCustomerName.Text, txtPhoneNumber.Text, DateTime.Today);
+            //Add the rental record to the rentals list
+            rentals.Add(rental);
+            //Mark car as rented 
+            selectedCar.IsRented = true;
+            //Refresh the car list to show update status
+            RefreshingCarList();
+            //Clear the customer name and phone number textboxes
+            txtCustomerName.Clear();
+            txtPhoneNumber.Clear();
+            //Display a success message
+            lblOutput.Text = selectedCar.Plate + "rented to " + rental.CustomerName + " on" + rental.RentDate.ToString("yyyy-MM-dd");
+        }
+
+        private void btnReturn_Click(object sender, EventArgs e)
+        {
+            //checks if car has been selected 
+            if(lstCars.SelectedIndex == -1)
+            {
+                lblOutput.Text = "Please select a car";
+                return;
+            }
+            //get the selected car from the cars list
+            Car selectedCar = cars[lstCars.SelectedIndex];
+            //Check if the car is currently rented
+            if(!selectedCar.IsRented)
+            {
+                lblOutput.Text = "This car is not currently rented";
+                return;
+            }
+            //find the active rental record
+            Rental activeRental = null;
+            foreach(Rental rental in rentals)
+            {
+                if (rental.Plate == selectedCar.Plate && !rental.IsReturned)
+                {
+                    activeRental = rental;
+                    break;
+                }
+            }
+            //check if an active rental recoed was found
+            if(activeRental == null)
+            {
+                lblOutput.Text = "No active rental record found";
+                return;
+            }
+            //mark rental as returned using todays date
+            activeRental.MarkReturned(DateTime.Today);
+            //change the car status to availabe
+            selectedCar.IsRented = false;
+            //refresh the car list to show the updated status
+            RefreshingCarList();
+            //Display the return confirmation
+            lblOutput.Text = selectedCar.Plate + " returned";
         }
     }
 }
