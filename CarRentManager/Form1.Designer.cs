@@ -50,6 +50,12 @@
             txtPhoneNumber = new TextBox();
             btnReturn = new Button();
             btnRent = new Button();
+            dptRentDate = new DateTimePicker();
+            lblRentDate = new Label();
+            lblReturnDate = new Label();
+            dtpReturnDate = new DateTimePicker();
+            lblRentalHistory = new Label();
+            lstHistory = new ListBox();
             SuspendLayout();
             // 
             // label1
@@ -205,9 +211,10 @@
             // lblCustomerName
             // 
             lblCustomerName.AutoSize = true;
+            lblCustomerName.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblCustomerName.Location = new Point(424, 120);
             lblCustomerName.Name = "lblCustomerName";
-            lblCustomerName.Size = new Size(97, 15);
+            lblCustomerName.Size = new Size(110, 17);
             lblCustomerName.TabIndex = 16;
             lblCustomerName.Text = "Customer Name:";
             // 
@@ -221,9 +228,10 @@
             // lblPhoneNumber
             // 
             lblPhoneNumber.AutoSize = true;
+            lblPhoneNumber.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblPhoneNumber.Location = new Point(430, 166);
             lblPhoneNumber.Name = "lblPhoneNumber";
-            lblPhoneNumber.Size = new Size(91, 15);
+            lblPhoneNumber.Size = new Size(105, 17);
             lblPhoneNumber.TabIndex = 18;
             lblPhoneNumber.Text = "Phone Number:";
             // 
@@ -254,11 +262,70 @@
             btnRent.UseVisualStyleBackColor = true;
             btnRent.Click += btnRent_Click;
             // 
+            // dptRentDate
+            // 
+            dptRentDate.Location = new Point(548, 247);
+            dptRentDate.Name = "dptRentDate";
+            dptRentDate.Size = new Size(194, 23);
+            dptRentDate.TabIndex = 23;
+            // 
+            // lblRentDate
+            // 
+            lblRentDate.AutoSize = true;
+            lblRentDate.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRentDate.Location = new Point(424, 255);
+            lblRentDate.Name = "lblRentDate";
+            lblRentDate.Size = new Size(71, 17);
+            lblRentDate.TabIndex = 24;
+            lblRentDate.Text = "Rent Date:";
+            // 
+            // lblReturnDate
+            // 
+            lblReturnDate.AutoSize = true;
+            lblReturnDate.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblReturnDate.Location = new Point(424, 293);
+            lblReturnDate.Name = "lblReturnDate";
+            lblReturnDate.Size = new Size(84, 17);
+            lblReturnDate.TabIndex = 25;
+            lblReturnDate.Text = "Return Date:";
+            // 
+            // dtpReturnDate
+            // 
+            dtpReturnDate.Location = new Point(548, 287);
+            dtpReturnDate.Name = "dtpReturnDate";
+            dtpReturnDate.Size = new Size(194, 23);
+            dtpReturnDate.TabIndex = 26;
+            // 
+            // lblRentalHistory
+            // 
+            lblRentalHistory.AutoSize = true;
+            lblRentalHistory.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblRentalHistory.Location = new Point(532, 361);
+            lblRentalHistory.Name = "lblRentalHistory";
+            lblRentalHistory.Size = new Size(95, 17);
+            lblRentalHistory.TabIndex = 27;
+            lblRentalHistory.Text = "Rental History";
+            // 
+            // lstHistory
+            // 
+            lstHistory.FormattingEnabled = true;
+            lstHistory.ItemHeight = 15;
+            lstHistory.Location = new Point(447, 422);
+            lstHistory.Name = "lstHistory";
+            lstHistory.Size = new Size(397, 64);
+            lstHistory.TabIndex = 28;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(915, 509);
+            Controls.Add(lstHistory);
+            Controls.Add(lblRentalHistory);
+            Controls.Add(dtpReturnDate);
+            Controls.Add(lblReturnDate);
+            Controls.Add(lblRentDate);
+            Controls.Add(dptRentDate);
             Controls.Add(btnRent);
             Controls.Add(btnReturn);
             Controls.Add(txtPhoneNumber);
@@ -312,5 +379,11 @@
         private TextBox txtPhoneNumber;
         private Button btnReturn;
         private Button btnRent;
+        private DateTimePicker dptRentDate;
+        private Label lblRentDate;
+        private Label lblReturnDate;
+        private DateTimePicker dtpReturnDate;
+        private Label lblRentalHistory;
+        private ListBox lstHistory;
     }
 }
