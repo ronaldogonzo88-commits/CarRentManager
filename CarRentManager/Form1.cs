@@ -78,6 +78,12 @@ namespace CarRentManager
 
         private void btnAddCar_Click(object sender, EventArgs e)
         {
+            //check that the a car category has been selected
+            if (cboCategory.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a car category.");
+                return;
+            }
             //Validate the car registration plate
             if (!IsValidPlate(txtPlate.Text))
             {
@@ -116,8 +122,23 @@ namespace CarRentManager
                 }
             }
 
-            //Create a new car and add it to the list
-            Car car1 = new Car(plate, txtModel.Text, rate);
+            //Create a car based on category
+            Car car1;
+            switch (cboCategory.Text)
+            {
+                case "Economy":
+                    car1 = new Economy(plate, txtModel.Text, rate);
+                    break;
+                case "SUV":
+                    car1 = new Economy(plate, txtModel.Text, rate);
+                    break;
+                case "Luxury":
+                    car1 = new Economy(plate, txtModel.Text, rate);
+                    break;
+                default:
+                    lblOutput.Text = "Invalid car category.";
+                    return;
+            }
             cars.Add(car1);
 
             //Refresh the car list adding
@@ -141,7 +162,8 @@ namespace CarRentManager
             foreach (Car car in cars)
             {
                 //Format each cars details for display
-                string details = car.Plate + " | " + car.Model + " | $" + car.DailyRate.ToString("F2") + " per day | " + car.GetStatus();
+                string details = car.Plate + " | " + car.Model + " | " +  car.GetCategory() + " | $" + car.DailyRate.ToString("F2") + " per day | " + car.GetStatus();
+                car.GetCategory();
 
                 //Add the car details to the list box
                 lstCars.Items.Add(details);

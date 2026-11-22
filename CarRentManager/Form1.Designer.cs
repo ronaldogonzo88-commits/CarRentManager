@@ -38,7 +38,6 @@
             lblModel = new Label();
             btnClear = new Button();
             txtDailyRate = new TextBox();
-            txtCategory = new TextBox();
             txtModel = new TextBox();
             lstCars = new ListBox();
             lblOutput = new Label();
@@ -56,6 +55,7 @@
             dtpReturnDate = new DateTimePicker();
             lblRentalHistory = new Label();
             lstHistory = new ListBox();
+            cboCategory = new ComboBox();
             SuspendLayout();
             // 
             // label1
@@ -154,13 +154,6 @@
             txtDailyRate.Name = "txtDailyRate";
             txtDailyRate.Size = new Size(185, 23);
             txtDailyRate.TabIndex = 9;
-            // 
-            // txtCategory
-            // 
-            txtCategory.Location = new Point(111, 199);
-            txtCategory.Name = "txtCategory";
-            txtCategory.Size = new Size(185, 23);
-            txtCategory.TabIndex = 10;
             // 
             // txtModel
             // 
@@ -315,11 +308,22 @@
             lstHistory.Size = new Size(397, 64);
             lstHistory.TabIndex = 28;
             // 
+            // cboCategory
+            // 
+            cboCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboCategory.FormattingEnabled = true;
+            cboCategory.Items.AddRange(new object[] { "Economy", "SUV", "Luxury" });
+            cboCategory.Location = new Point(111, 203);
+            cboCategory.Name = "cboCategory";
+            cboCategory.Size = new Size(185, 23);
+            cboCategory.TabIndex = 29;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(915, 509);
+            Controls.Add(cboCategory);
             Controls.Add(lstHistory);
             Controls.Add(lblRentalHistory);
             Controls.Add(dtpReturnDate);
@@ -337,7 +341,6 @@
             Controls.Add(lblOutput);
             Controls.Add(lstCars);
             Controls.Add(txtModel);
-            Controls.Add(txtCategory);
             Controls.Add(txtDailyRate);
             Controls.Add(btnClear);
             Controls.Add(lblModel);
@@ -367,7 +370,6 @@
         private Label lblModel;
         private Button btnClear;
         private TextBox txtDailyRate;
-        private TextBox txtCategory;
         private TextBox txtModel;
         private ListBox lstCars;
         private Label lblOutput;
@@ -385,5 +387,6 @@
         private DateTimePicker dtpReturnDate;
         private Label lblRentalHistory;
         private ListBox lstHistory;
+        private ComboBox cboCategory;
     }
 }

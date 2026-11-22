@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarRentManager
 {
-    class Car
+    public class Car
     {
         //Private fields that stores cars info and rental status
         private string plate;
@@ -56,6 +56,15 @@ namespace CarRentManager
             {
                 return "Available";
             }
+        }
+        //calculating the total rental cost and get the car category
+        public virtual decimal CalculateTotal(int days)
+        {
+            return days * DailyRate;
+        }
+        public virtual string GetCategory()
+        {
+            return "Standard";
         }
     }
 }
