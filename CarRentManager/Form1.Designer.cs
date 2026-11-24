@@ -56,6 +56,14 @@
             lblRentalHistory = new Label();
             lstHistory = new ListBox();
             cboCategory = new ComboBox();
+            txtSearch = new TextBox();
+            btnSearch = new Button();
+            btnReport = new Button();
+            lstResults = new ListBox();
+            lstReport = new ListBox();
+            lblReport = new Label();
+            lblResults = new Label();
+            lblSearch = new Label();
             SuspendLayout();
             // 
             // label1
@@ -101,7 +109,7 @@
             // 
             lblRegistredCars.AutoSize = true;
             lblRegistredCars.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRegistredCars.Location = new Point(29, 380);
+            lblRegistredCars.Location = new Point(29, 367);
             lblRegistredCars.Name = "lblRegistredCars";
             lblRegistredCars.Size = new Size(102, 17);
             lblRegistredCars.TabIndex = 4;
@@ -166,16 +174,16 @@
             // 
             lstCars.FormattingEnabled = true;
             lstCars.ItemHeight = 15;
-            lstCars.Location = new Point(29, 422);
+            lstCars.Location = new Point(12, 392);
             lstCars.Name = "lstCars";
-            lstCars.Size = new Size(267, 64);
+            lstCars.Size = new Size(330, 94);
             lstCars.TabIndex = 12;
             // 
             // lblOutput
             // 
             lblOutput.AutoSize = true;
             lblOutput.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblOutput.Location = new Point(93, 342);
+            lblOutput.Location = new Point(85, 329);
             lblOutput.Name = "lblOutput";
             lblOutput.Size = new Size(11, 17);
             lblOutput.TabIndex = 13;
@@ -205,7 +213,7 @@
             // 
             lblCustomerName.AutoSize = true;
             lblCustomerName.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblCustomerName.Location = new Point(424, 120);
+            lblCustomerName.Location = new Point(354, 118);
             lblCustomerName.Name = "lblCustomerName";
             lblCustomerName.Size = new Size(110, 17);
             lblCustomerName.TabIndex = 16;
@@ -213,7 +221,7 @@
             // 
             // txtCustomerName
             // 
-            txtCustomerName.Location = new Point(548, 112);
+            txtCustomerName.Location = new Point(470, 112);
             txtCustomerName.Name = "txtCustomerName";
             txtCustomerName.Size = new Size(185, 23);
             txtCustomerName.TabIndex = 17;
@@ -222,7 +230,7 @@
             // 
             lblPhoneNumber.AutoSize = true;
             lblPhoneNumber.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblPhoneNumber.Location = new Point(430, 166);
+            lblPhoneNumber.Location = new Point(359, 164);
             lblPhoneNumber.Name = "lblPhoneNumber";
             lblPhoneNumber.Size = new Size(105, 17);
             lblPhoneNumber.TabIndex = 18;
@@ -230,14 +238,14 @@
             // 
             // txtPhoneNumber
             // 
-            txtPhoneNumber.Location = new Point(548, 158);
+            txtPhoneNumber.Location = new Point(470, 163);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(185, 23);
             txtPhoneNumber.TabIndex = 19;
             // 
             // btnReturn
             // 
-            btnReturn.Location = new Point(548, 203);
+            btnReturn.Location = new Point(470, 202);
             btnReturn.Name = "btnReturn";
             btnReturn.Size = new Size(75, 23);
             btnReturn.TabIndex = 20;
@@ -247,7 +255,7 @@
             // 
             // btnRent
             // 
-            btnRent.Location = new Point(658, 203);
+            btnRent.Location = new Point(580, 205);
             btnRent.Name = "btnRent";
             btnRent.Size = new Size(75, 23);
             btnRent.TabIndex = 22;
@@ -257,7 +265,7 @@
             // 
             // dptRentDate
             // 
-            dptRentDate.Location = new Point(548, 247);
+            dptRentDate.Location = new Point(470, 249);
             dptRentDate.Name = "dptRentDate";
             dptRentDate.Size = new Size(194, 23);
             dptRentDate.TabIndex = 23;
@@ -266,7 +274,7 @@
             // 
             lblRentDate.AutoSize = true;
             lblRentDate.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRentDate.Location = new Point(424, 255);
+            lblRentDate.Location = new Point(393, 253);
             lblRentDate.Name = "lblRentDate";
             lblRentDate.Size = new Size(71, 17);
             lblRentDate.TabIndex = 24;
@@ -276,7 +284,7 @@
             // 
             lblReturnDate.AutoSize = true;
             lblReturnDate.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblReturnDate.Location = new Point(424, 293);
+            lblReturnDate.Location = new Point(380, 295);
             lblReturnDate.Name = "lblReturnDate";
             lblReturnDate.Size = new Size(84, 17);
             lblReturnDate.TabIndex = 25;
@@ -284,7 +292,7 @@
             // 
             // dtpReturnDate
             // 
-            dtpReturnDate.Location = new Point(548, 287);
+            dtpReturnDate.Location = new Point(470, 291);
             dtpReturnDate.Name = "dtpReturnDate";
             dtpReturnDate.Size = new Size(194, 23);
             dtpReturnDate.TabIndex = 26;
@@ -293,7 +301,7 @@
             // 
             lblRentalHistory.AutoSize = true;
             lblRentalHistory.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblRentalHistory.Location = new Point(532, 361);
+            lblRentalHistory.Location = new Point(507, 342);
             lblRentalHistory.Name = "lblRentalHistory";
             lblRentalHistory.Size = new Size(95, 17);
             lblRentalHistory.TabIndex = 27;
@@ -303,9 +311,9 @@
             // 
             lstHistory.FormattingEnabled = true;
             lstHistory.ItemHeight = 15;
-            lstHistory.Location = new Point(447, 422);
+            lstHistory.Location = new Point(359, 377);
             lstHistory.Name = "lstHistory";
-            lstHistory.Size = new Size(397, 64);
+            lstHistory.Size = new Size(456, 109);
             lstHistory.TabIndex = 28;
             // 
             // cboCategory
@@ -318,11 +326,95 @@
             cboCategory.Size = new Size(185, 23);
             cboCategory.TabIndex = 29;
             // 
+            // txtSearch
+            // 
+            txtSearch.Location = new Point(846, 112);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(209, 23);
+            txtSearch.TabIndex = 30;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Location = new Point(1113, 111);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(54, 23);
+            btnSearch.TabIndex = 31;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
+            // 
+            // btnReport
+            // 
+            btnReport.Location = new Point(846, 317);
+            btnReport.Name = "btnReport";
+            btnReport.Size = new Size(75, 42);
+            btnReport.TabIndex = 32;
+            btnReport.Text = "Generate report";
+            btnReport.UseVisualStyleBackColor = true;
+            btnReport.Click += btnReport_Click;
+            // 
+            // lstResults
+            // 
+            lstResults.FormattingEnabled = true;
+            lstResults.ItemHeight = 15;
+            lstResults.Location = new Point(846, 176);
+            lstResults.Name = "lstResults";
+            lstResults.Size = new Size(321, 64);
+            lstResults.TabIndex = 33;
+            // 
+            // lstReport
+            // 
+            lstReport.FormattingEnabled = true;
+            lstReport.ItemHeight = 15;
+            lstReport.Location = new Point(846, 380);
+            lstReport.Name = "lstReport";
+            lstReport.Size = new Size(321, 109);
+            lstReport.TabIndex = 34;
+            // 
+            // lblReport
+            // 
+            lblReport.AutoSize = true;
+            lblReport.Font = new Font("Arial Narrow", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblReport.Location = new Point(846, 279);
+            lblReport.Name = "lblReport";
+            lblReport.Size = new Size(91, 16);
+            lblReport.TabIndex = 35;
+            lblReport.Text = "Business report";
+            // 
+            // lblResults
+            // 
+            lblResults.AutoSize = true;
+            lblResults.Font = new Font("Arial Rounded MT Bold", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblResults.Location = new Point(846, 149);
+            lblResults.Name = "lblResults";
+            lblResults.Size = new Size(55, 15);
+            lblResults.TabIndex = 36;
+            lblResults.Text = "Results";
+            // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.Font = new Font("Arial Rounded MT Bold", 12F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblSearch.Location = new Point(846, 63);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(137, 18);
+            lblSearch.TabIndex = 37;
+            lblSearch.Text = "Search for a car";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(915, 509);
+            AutoValidate = AutoValidate.EnableAllowFocusChange;
+            ClientSize = new Size(1189, 509);
+            Controls.Add(lblSearch);
+            Controls.Add(lblResults);
+            Controls.Add(lblReport);
+            Controls.Add(lstReport);
+            Controls.Add(lstResults);
+            Controls.Add(btnReport);
+            Controls.Add(btnSearch);
+            Controls.Add(txtSearch);
             Controls.Add(cboCategory);
             Controls.Add(lstHistory);
             Controls.Add(lblRentalHistory);
@@ -388,5 +480,13 @@
         private Label lblRentalHistory;
         private ListBox lstHistory;
         private ComboBox cboCategory;
+        private TextBox txtSearch;
+        private Button btnSearch;
+        private Button btnReport;
+        private ListBox lstResults;
+        private ListBox lstReport;
+        private Label lblReport;
+        private Label lblResults;
+        private Label lblSearch;
     }
 }

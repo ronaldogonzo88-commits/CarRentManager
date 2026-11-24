@@ -63,22 +63,11 @@ namespace CarRentManager
             get { return returnDate != DateTime.MinValue; }
         }
         //mark rental as returned
-            public void MarkReturned(DateTime returnDate, decimal dailyRate)
+        public void MarkReturned(DateTime returnDate, int days, decimal totalCost)
         {
             //calculate number of days btwn renting and returning
-            int CalculateDays = (returnDate - RentDate).Days;
-            //make sure the rental costs at least one day
-            if (CalculateDays < 1)
-            {
-                days = 1;
-            }
-            else
-            {
-                days = CalculateDays;
-            }
-            //calculate total rent
-            totalCost = days * dailyRate;
-            //mark the rental as returned
+            this.days = days;
+            this.totalCost = totalCost;
             this.returnDate = returnDate;
         }
     }

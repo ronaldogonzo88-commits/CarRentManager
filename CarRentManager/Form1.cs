@@ -56,7 +56,7 @@ namespace CarRentManager
             //empty the history list
             lstHistory.Items.Clear();
             //go thru every rental
-            foreach(Rental rental in rentals)
+            foreach (Rental rental in rentals)
             {
                 if (rental.IsReturned)
                 {
@@ -130,10 +130,10 @@ namespace CarRentManager
                     car1 = new Economy(plate, txtModel.Text, rate);
                     break;
                 case "SUV":
-                    car1 = new Economy(plate, txtModel.Text, rate);
+                    car1 = new SUV(plate, txtModel.Text, rate);
                     break;
                 case "Luxury":
-                    car1 = new Economy(plate, txtModel.Text, rate);
+                    car1 = new Luxury(plate, txtModel.Text, rate);
                     break;
                 default:
                     lblOutput.Text = "Invalid car category.";
@@ -161,13 +161,15 @@ namespace CarRentManager
             //Go thru every car in the list
             foreach (Car car in cars)
             {
-                //Format each cars details for display
-                string details = car.Plate + " | " + car.Model + " | " +  car.GetCategory() + " | $" + car.DailyRate.ToString("F2") + " per day | " + car.GetStatus();
-                car.GetCategory();
+                //added formatted cardeatils to the list box
+                lstCars.Items.Add(FormatCarLine(car));
 
-                //Add the car details to the list box
-                lstCars.Items.Add(details);
             }
+        }
+        //format car info forr display
+        private string FormatCarLine(Car car)
+        {
+            return $"{car.Plate} | {car.Model} | {car.GetCategory()} |$ {car.DailyRate:F2} per day | {car.GetStatus()}";
         }
         //Button used to clear all the text box an lebels
         private void btnClear_Click(object sender, EventArgs e)
@@ -176,6 +178,19 @@ namespace CarRentManager
             txtModel.Clear();
             txtDailyRate.Clear();
             lblOutput.Text = "";
+        }
+
+        //find a car using its plate
+        private Car? FindCar(string plate)
+        {
+            foreach(Car car in cars)
+            {
+                if (car.Plate == plate)
+                {
+                    return car;
+                }
+            }
+            return null;
         }
 
         private void btnRent_Click(object sender, EventArgs e)
@@ -207,7 +222,7 @@ namespace CarRentManager
                 return;
             }
             //check that the return date is not before the rent date
-            if (dtpReturnDate.Value.Date <dptRentDate.Value.Date)
+            if (dtpReturnDate.Value.Date < dptRentDate.Value.Date)
             {
                 lblOutput.Text = "Return date cannot be before the rent date.";
                 return;
@@ -261,12 +276,18 @@ namespace CarRentManager
                 return;
             }
             //mark rental as returned using todays date
-            if(dtpReturnDate.Value.Date < activeRental.RentDate.Date)
+            if (dtpReturnDate.Value.Date < activeRental.RentDate.Date)
             {
                 lblOutput.Text = "Return date cannot br before rent date.";
                 return;
             }
-            activeRental.MarkReturned(dtpReturnDate.Value.Date, selectedCar.DailyRate);
+            int days = (dtpReturnDate.Value.Date - activeRental.RentDate.Date).Days;
+            if (days < 1)
+            {
+                days = 1;
+            }
+            decimal finalCost = selectedCar.CalculateTotal(days);
+            activeRental.MarkReturned(dtpReturnDate.Value, days, finalCost);
             //change the car status to availabe
             selectedCar.IsRented = false;
             //refresh the car list to show the updated status
@@ -274,6 +295,102 @@ namespace CarRentManager
             RefreshHistory();
             //Display the return confirmation
             lblOutput.Text = $"{selectedCar.Plate} returned. {activeRental.Days} days, total ${activeRental.TotalCost:F2}";
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            //check if search button is empty
+            if (txtSearch.Text.Trim() == "")
+            {
+                lblOutput.Text = "Please enter something to search";
+                return;
+            }
+            //get search text and convert it to lowercase
+            string searchText = txtSearch.Text.Trim().ToLower();
+            //clear previous search
+            lstResults.Items.Clear();
+            //going thru every car in list
+            foreach (Car car in cars)
+            {
+                //check if the plate or model contains the search text
+                if (car.Plate.ToLower().Contains(searchText) || car.Model.ToLower().Contains(searchText))
+                {
+                    lstResults.Items.Add(FormatCarLine(car));
+                }
+            }
+            //check if any cars matched the search 
+            if (lstResults.Items.Count == 0)
+            {
+                lstResults.Items.Add("No cars found");
+            }
+        }
+
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+            //count totan num of cars
+            int totalCars = cars.Count;
+            //start the availabe and return rented counts at zero
+            int availableCars = 0;
+            int rentedCars = 0;
+            //go thru every car and check its status
+            foreach (Car car in cars)
+            {
+                if (car.IsRented)
+                {
+                    rentedCars++;
+                }
+                else
+                {
+                    availableCars++;
+                }
+            }
+            //store total income for each car category
+            decimal totalIncome = 0m;
+            decimal economyIncome = 0m;
+            decimal suvIncome = 0;
+            decimal luxuryIncome = 0m;
+
+            //Go thru every rental in rental history
+            foreach (Rental rental in rentals)
+            {
+                //store the total income and income for each car category history
+                if (rental.IsReturned)
+                {
+                    //find the car connected to this rental
+                    Car? car = FindCar(rental.Plate);
+                    //make sure the car was found
+                    if (car != null)
+                    {
+                        //add this rental cost to the total income
+                        totalIncome += rental.TotalCost;
+                        //check the car category and add income to the correct category
+                        string category = car.GetCategory();
+                        if (category == "Economy")
+                        {
+                            economyIncome += rental.TotalCost;
+                        }
+                        else if (category == "SUV")
+                        {
+                            suvIncome += rental.TotalCost;
+                        }
+                        else if (category == "Luxury")
+                        {
+                            luxuryIncome += rental.TotalCost;
+                        }
+                    }
+                }
+            }
+            //clearany previous report
+            lstReport.Items.Clear();
+            //display the car counts
+            lstReport.Items.Add("Total cars: " + totalCars);
+            lstReport.Items.Add("Available cars: " + availableCars);
+            lstReport.Items.Add("Rented cars: " + rentedCars);
+            //display the income figures
+            lstReport.Items.Add("Total income: $" + totalIncome.ToString("F2"));
+            lstReport.Items.Add("Economy income: $" + economyIncome.ToString("F2"));
+            lstReport.Items.Add("SUV income: $" + suvIncome.ToString("F2"));
+            lstReport.Items.Add("Luxury income: $" + luxuryIncome.ToString("F2"));
         }
     }
 }
