@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using MySql.Data.MySqlClient;
 
 namespace CarRentManager
 {
@@ -9,6 +10,9 @@ namespace CarRentManager
 
         //Store all history of rentals
         private List<Rental> rentals = new List<Rental>();
+
+        //store the connection details for the carrent DB
+        private string connectionString = "server=localhost;user id=root;password=;database=carrent;";
         public Form1()
         {
             InitializeComponent();
@@ -71,9 +75,120 @@ namespace CarRentManager
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //load cars and rentals from DB
+            LoadCars();
+            LoadRentals();
+
             //Refresh the car list when the car opens
             RefreshingCarList();
             RefreshHistory();
+        }
+
+        //insert a new car into the database
+        private bool InsertCars(Car car)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "INSERT INTO cars (plate, model, category, daily_rate, is_rented) " + "VALUES (@plate, @model, @category, @rate, @rented)";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@plate", car.Plate);
+                        cmd.Parameters.AddWithValue("@model", car.Model);
+                        cmd.Parameters.AddWithValue("@category", car.GetCategory());
+                        cmd.Parameters.AddWithValue("@rate", car.DailyRate);
+                        cmd.Parameters.AddWithValue("@rented", car.IsRented);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Could not save car to database: " + ex.Message);
+                return false;
+            }
+        }
+
+        //Insert a new rental into the database
+        private bool InsertRental(Rental rental)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"INSERT INTO rentals (plate, customer_name, customer_phone, rent_date) VALUES(@plate, @name, @phone, @rentDate)";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@plate", rental.Plate);
+                        cmd.Parameters.AddWithValue("@name", rental.CustomerName);
+                        cmd.Parameters.AddWithValue("@phone", rental.CustomerPhone);
+                        cmd.Parameters.AddWithValue("@rentDate", rental.RentDate);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Could not save rental: " + ex.Message);
+                return false;
+            }
+        }
+
+        //update wheather a car is rented in the DB
+        private bool UpdateCarRented(string plate, bool isRented)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE cars SET is_rented = @rented WHERE plate = @plate";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@rented", isRented);
+                        cmd.Parameters.AddWithValue("@plate", plate);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Could not update car status: " + ex.Message);
+                return false;
+            }
+        }
+
+        //update a rental record when the car is returned
+        private bool UpdateRentalReturned(Rental rental)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                { 
+                    conn.Open();
+                    string query = @"UPDATE rentals SET return_date = @returnDate, days = @days, total_cost = @totalCost WHERE plate = @plate AND return_date IS NULL";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@returnDate", rental.ReturnDate);
+                        cmd.Parameters.AddWithValue("@days", rental.Days);
+                        cmd.Parameters.AddWithValue("@totalCost", rental.TotalCost);
+                        cmd.Parameters.AddWithValue("@plate", rental.Plate);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Could not update rental: " + ex.Message);
+                return false;
+            }
         }
 
         private void btnAddCar_Click(object sender, EventArgs e)
@@ -139,6 +254,13 @@ namespace CarRentManager
                     lblOutput.Text = "Invalid car category.";
                     return;
             }
+
+            //save the car to the database first
+            if (!InsertCars(car1))
+            {
+                return;
+            }
+            //add the car to the list after saving
             cars.Add(car1);
 
             //Refresh the car list adding
@@ -180,6 +302,110 @@ namespace CarRentManager
             lblOutput.Text = "";
         }
 
+        //Load all cars from the database
+        private void LoadCars()
+        {
+            cars.Clear();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM cars";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //Read car details from DB
+                            string plate = reader["plate"].ToString()!;
+                            string model = reader["model"].ToString()!;
+                            string category = reader["category"].ToString()!;
+                            decimal dailyRate = Convert.ToDecimal(reader["daily_rate"]);
+                            bool isRented = Convert.ToBoolean(reader["is_rented"]);
+
+                            //create the correct car object
+                            Car car;
+                            if (category == "Economy")
+                            {
+
+                                car = new Economy(plate, model, dailyRate);
+                                ;
+                            }
+                            else if (category == "SUV")
+                            {
+                                car = new SUV(plate, model, dailyRate);
+                            }
+                            else if (category == "Luxury")
+                            {
+                                car = new Luxury(plate, model, dailyRate);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                            //restore the cars rental status
+                            car.IsRented = isRented;
+                            //add the car to the list
+                            cars.Add(car);
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("Could not connect to the database. Is MySQL running " + ex.Message);
+            }
+        }
+
+        //Load all rental records from the database
+        private void LoadRentals()
+        {
+            rentals.Clear();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM rentals";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //Read rental details from DB
+                            string plate = reader["plate"].ToString()!;
+                            string customerName = reader["customer_name"].ToString()!;
+                            string customerPhone = reader["customer_phone"].ToString()!;
+                            DateTime rentDate = Convert.ToDateTime(reader["rent_date"]);
+
+                            //create the correct car object
+                            Rental rental = new Rental(plate, customerName, customerPhone, rentDate);
+
+                            //check wheather the rental has been returned
+                            if (reader["return_date"] != DBNull.Value)
+                            {
+                                DateTime returnDate = Convert.ToDateTime(reader["return_date"]);
+                                int days = Convert.ToInt32(reader["days"]);
+                                decimal totalCost = Convert.ToDecimal(reader["total_cost"]);
+
+                            //restore the returned rental details
+                            rental.MarkReturned(returnDate, days, totalCost);
+                        }
+                        //add the rental to the list
+                        rentals.Add(rental);
+                        }
+
+                    }
+                }
+            }
+        catch (MySqlException ex)
+            {
+            MessageBox.Show("Could not load rentals. Is MySQL running? " + ex.Message);
+            }
+        }
         //find a car using its plate
         private Car? FindCar(string plate)
         {
@@ -229,10 +455,20 @@ namespace CarRentManager
             }
             //Create  a rental using the selected rent date
             Rental rental = new Rental(selectedCar.Plate, txtCustomerName.Text, txtPhoneNumber.Text, dptRentDate.Value.Date);
-            //Add the rental record to the rentals list
+            //save rental to the database first
+            if (!InsertRental(rental))
+            {
+                return;
+            }
+            //Add the rental record to the rentals list after saving succeeds
             rentals.Add(rental);
             RefreshHistory();
-            //Mark car as rented 
+            //update the cars status in the DB
+            if (!UpdateCarRented(selectedCar.Plate, true))
+            {
+                return;
+            }
+            //UPDATE THE CARS STATUS IN THE PROGRAM
             selectedCar.IsRented = true;
             //Refresh the car list to show update status
             RefreshingCarList();
@@ -288,6 +524,12 @@ namespace CarRentManager
             }
             decimal finalCost = selectedCar.CalculateTotal(days);
             activeRental.MarkReturned(dtpReturnDate.Value, days, finalCost);
+
+            //save returned details and update availabilityin DB
+            if (!UpdateRentalReturned(activeRental) || !UpdateCarRented(selectedCar.Plate, false))
+            {
+                return;
+            }
             //change the car status to availabe
             selectedCar.IsRented = false;
             //refresh the car list to show the updated status
